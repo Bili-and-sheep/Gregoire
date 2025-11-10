@@ -82,13 +82,13 @@ $TTL 7d
 sudo vim /etc/bind/named.conf.local
 ```bash
 zone "oteria.lan" {
-    type master;
-    file "/var/cache/bind/oteria.lan";
+	type master;
+	file "/var/cache/bind/oteria.lan";
 };
 
-zone "131.58.192.in-addr.arpa" {
-    type master;
-    file "/var/cache/bind/oteria.lan.rev";
+zone "58.168.192.in-addr.arpa" {
+	type master;
+	file "/var/cache/bind/oteria.lan.rev";
 };
 ```
 
@@ -96,3 +96,5 @@ zone "131.58.192.in-addr.arpa" {
 
 sudo systemctl restart named
 sudo systemctl status named
+
+nslookup oteria.lan
