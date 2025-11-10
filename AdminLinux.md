@@ -39,12 +39,13 @@ apt install debian bind9
 ```
 
 ```bash
+cd /etc/bind/
 ```
-https://www.it-connect.fr/dns-avec-bind-9/
 https://bind9.readthedocs.io/en/v9.18.14/chapter3.html
 
-
-sudo vim oteria.lan
+```bash
+sudo vim /etc/bind/oteria.lan
+```
 
 ```bash
 $TTL 7d
@@ -85,8 +86,13 @@ zone "oteria.lan" {
     file "/var/cache/bind/oteria.lan";
 };
 
-zone "122.168.192.in-addr.arpa" {
+zone "131.58.192.in-addr.arpa" {
     type master;
     file "/var/cache/bind/oteria.lan.rev";
 };
 ```
+
+### dig -x oteria.lan
+
+sudo systemctl restart named
+sudo systemctl status named
