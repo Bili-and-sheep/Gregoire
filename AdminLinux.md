@@ -39,12 +39,12 @@ apt install debian bind9
 ```
 
 ```bash
-cd /etc/bind/
+cd /var/cache/bind/
 ```
 https://bind9.readthedocs.io/en/v9.18.14/chapter3.html
 
 ```bash
-sudo vim /etc/bind/oteria.lan
+sudo vim /var/cache/bind/oteria.lan
 ```
 
 ```bash
@@ -63,7 +63,7 @@ oteria.lan.	IN 		A 	192.168.58.131
 ```
 
 cp oteria.lan oteria.lan.rev
-sudo vim oteria.lan.rev
+sudo vim /var/cache/bind/oteria.lan.rev
 ```bash
 $TTL 7d
 @         IN      SOA   oteria.lan. admin.oteria.lan. (
@@ -92,9 +92,27 @@ zone "58.168.192.in-addr.arpa" {
 };
 ```
 
-### dig -x oteria.lan
+In etc/resolv.conf change the nameserver xxx.xxx.xxx.xxx by your dns server ip
+```bash
+sudo vim /etc/resolv.conf
+```
 
+### Restart named service
+```
 sudo systemctl restart named
 sudo systemctl status named
+```
 
+### Test your DNS
+```bash
+dig -x oteria.lan
+```
+```bash
 nslookup oteria.lan
+```
+
+
+
+
+
+
