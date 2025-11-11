@@ -33,7 +33,7 @@ iface enp0s5 inet static
 ```
 
 
-### Bind9
+#### Bind9
 ```bash
 apt install debian bind9
 ```
@@ -97,13 +97,13 @@ In etc/resolv.conf change the nameserver xxx.xxx.xxx.xxx by your dns server ip
 sudo vim /etc/resolv.conf
 ```
 
-### Restart named service
+#### Restart named service
 ```
 sudo systemctl restart named
 sudo systemctl status named
 ```
 
-### Test your DNS
+#### Test your DNS
 ```bash
 dig -x oteria.lan
 ```
@@ -113,6 +113,10 @@ nslookup oteria.lan
 
 
 
+## TP3 - Install HTTPD / NGINX
+```bash
+sudo apt install apache2
+```
 
 
 
