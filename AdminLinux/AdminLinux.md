@@ -19,12 +19,12 @@ sudo vim /etc/network/interfaces
 
 ```
 # The primary network interface
-auto enp0s5
-iface enp0s5 inet static
- address 192.168.2.236
+allow-hotplug ens160
+iface ens160 inet static
+ address 192.168.58.128
  netmask 255.255.255.0
- gateway 192.168.2.254
- dns-nameservers 1.1.1.1 8.8.8.8
+ gateway 192.168.58.2
+ dns-nameserver 192.168.58.131 1.1.1.1
  ``` 
 
  ```bash
