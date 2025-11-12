@@ -123,14 +123,19 @@ nslookup oteria.lan
 ### Install MariaDB
 https://www.digitalocean.com/community/tutorials/how-to-install-mariadb-on-ubuntu-20-04
 ```bash
-sudo apt-get install mariadb-serve
+sudo apt-get install mariadb-server
+```
+```bash
 sudo systemctl enable mariadb.service
+```
+```bash
 sudo mariadb-secure-installation
 ```
 
 
 
 After You setup your account please change the acces with % (meaning that you can connect from everywere and not only localost)
+⚠️ DON'T DO IT ON A PROD SERVER ⚠️
 ```bash
 GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'password' WITH GRANT OPTION;
 ```
@@ -147,20 +152,43 @@ change the = value to 0.0.0.0
 
 
 
-### Install HTTPD / NGINX
+### Install Apache2 / NGINX
 
 ```bash
 sudo apt install apache2 php-cli
-sudo apt install php-fpm php-mysql mysql-server nginx unzip php-xml
+sudo apt install php-fpm php-mysql mariadb-server nginx unzip php-xml
 ```
 
+
 ### Install Wordpress (NGINX)
+
+#### First Create your Data1base for wordpress
+***Connect to your db***
+```bash
+mariadb -h ip.of.your.db.server -u user -p
+```
+```bash
+CREATE DATABASE wordpress_db
+```
+
+***The best pratice is to create a user how is only responsible of the wordpress db***
+
+```bash
+GRANT ALL ON wordpress_db.* TO 'wpuser'@'localhost' IDENTIFIED BY 'Passw0rd!' WITH GRANT OPTION;
+```
+
+```bash
+FLUSH PRIVILEGES;
+```
+
+#### Nginx Config
+
 
 ```bash
 cd /etc/nginx/sites-available
 ```
 
-*** Show php path
+***Show php path***
 
 ```bash
 ls /var/run/php
@@ -169,12 +197,12 @@ ls /var/run/php
 ```bash
 vim wordpress.conf
 ```
-** fastcgi_pass unix:/run/php/php8.4-fpm.sock; replace php8.4-fpm by your actuall php version
+***fastcgi_pass unix:/run/php/php8.4-fpm.sock; replace php8.4 by your actuall php version***
 
 ```bash
 server {
             listen 80;
-            root /var/www/html/wordpress/public_html;
+            root /var/www/wordpress/public_html;
             index index.php index.html;
             server_name SUBDOMAIN.DOMAIN.TLD;
 
@@ -212,26 +240,65 @@ server {
 }
 ```
 
-** Chek your conf nginx
-```bash
-sudo nginx -t
-```
-
 ```bash
 cd /etc/nginx/sites-enabled
 sudo ln -s ../sites-available/wordpress.conf .
+```
+***Chek your conf nginx***
+```bash
+sudo nginx -t
 ```
 ```bash
 systemctl reload nginx
 ```
 
+#### Install Wordpress
+
 ```bash
-cd /var/www/html/wordpress/public_html
+cd /var/www/wordpress/public_html
+```
+```bash
 sudo wget https://wordpress.org/latest.tar.gz
+```
+```bash
 sudo tar -zxvf latest.tar.gz
+```
+```bash
 sudo mv wordpress/* .
+```
+```bash
 sudo rm -rf wordpress
 ```
+```bash
+cd /var/www/html/wordpress/public_html
+```
+```bash
+chown -R www-data:www-data *
+```
+```bash
+chmod -R 755 *
+```
+
+***You can already setup the db connection before starting the Wordpress intal***
+```bash
+cd /var/www//wordpress/public_html
+```
+```bash
+sudo mv wp-config-sample.php wp-config.php
+```
+```bash
+sudo vim wp-config.php
+```
+
+
+### Install NextCloud (Apache2/Httpd)
+
+
+
+
+
+
+
 
 
 
