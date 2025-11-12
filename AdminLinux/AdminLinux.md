@@ -122,6 +122,7 @@ sudo apt install php-fpm php-mysql mysql-server nginx unzip php-xml
 ```
 
 ### Install MariaDB
+https://www.digitalocean.com/community/tutorials/how-to-install-mariadb-on-ubuntu-20-04
 ```bash
 sudo apt-get install mariadb-server 
 sudo systemctl enable mariadb.service
