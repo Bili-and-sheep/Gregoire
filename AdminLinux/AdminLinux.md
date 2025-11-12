@@ -62,6 +62,11 @@ dns1		IN      A 	192.168.58.131
 oteria.lan.	IN 		A 	192.168.58.131
 ```
 
+To add an entry (we will see wordpress later) at the end of your bind config write
+```bash
+your.entry. IN      A   xxx.xxx.xxx.xxx
+```
+
 cp oteria.lan oteria.lan.rev
 sudo vim /var/cache/bind/oteria.lan.rev
 ```bash
@@ -123,6 +128,8 @@ sudo systemctl enable mariadb.service
 sudo mariadb-secure-installation
 ```
 
+
+
 After You setup your account please change the acces with % (meaning that you can connect from everywere and not only localost)
 ```bash
 GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'password' WITH GRANT OPTION;
@@ -153,7 +160,7 @@ sudo apt install php-fpm php-mysql mysql-server nginx unzip php-xml
 cd /etc/nginx/sites-available
 ```
 
-*** Voire version php
+*** Show php path
 
 ```bash
 ls /var/run/php
@@ -220,11 +227,11 @@ systemctl reload nginx
 
 ```bash
 cd /var/www/html/wordpress/public_html
-sudo wget https://wordpress.org/latest.zip
-sudo apt-get install unzip
-sudo unzip latest.zip
+sudo wget https://wordpress.org/latest.tar.gz
+sudo tar -zxvf latest.tar.gz
+sudo mv wordpress/* .
+sudo rm -rf wordpress
 ```
-
 
 
 
@@ -236,9 +243,17 @@ root
 wpuser
 wppwd
 
+nextuser
+nextpwd
+
 userWordPress
 
 narvalo
+4nRJT)8WNBK8t*k9Wq
+
+
+userNextCloud
+berangere
 4nRJT)8WNBK8t*k9Wq
 ```
 
