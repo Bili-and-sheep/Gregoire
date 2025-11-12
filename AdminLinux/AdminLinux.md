@@ -235,6 +235,7 @@ sudo rm -rf wordpress
 
 
 
+
 ```bash
 mariaDB user
 root

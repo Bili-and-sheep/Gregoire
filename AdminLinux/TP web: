@@ -1,0 +1,9 @@
+TP web:
+[X]Cloner le template trois fois. Appeller les clones httpd et nginx et un nommé bdd
+[X]Installer php-fpm et nginx sur la VM nginx
+[X]Installer php-cli et apache2 sur la VM httpd
+[X]Installer Wordpress sur nginx
+[X]Installer Nextcloud sur httpd
+[X]Le serveur de base de données de chaque service doit être sur la VM BDD
+[]Proposer une configuration sécurisée des services
+[]Implémenter la partie chiffrement avec le protocole TLS. Les certificats x509 ne doivent pas être autosignés
