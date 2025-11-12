@@ -123,9 +123,20 @@ sudo systemctl enable mariadb.service
 sudo mariadb-secure-installation
 ```
 
+After You setup your account please change the acces with % (meaning that you can connect from everywere and not only localost)
+```bash
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'password' WITH GRANT OPTION;
+```
 
+To allow access to mariadb from everywhere edit
 
+```bash
+sudo cat /etc/mysql/mariadb.conf.d/50-server.cnf
+```
 
+and at 
+bind-address
+change the = value to 0.0.0.0
 
 
 
@@ -137,22 +148,78 @@ sudo apt install php-fpm php-mysql mysql-server nginx unzip php-xml
 ```
 
 ### Install Wordpress (NGINX)
+
 ```bash
 cd /etc/nginx/sites-available
-```bash
-sudo rm default
 ```
+
+*** Voire version php
 
 ```bash
 ls /var/run/php
 ```
 
 ```bash
-sudo mkdir -p /var/www/html/wordpress/public_html
+vim wordpress.conf
+```
+** fastcgi_pass unix:/run/php/php8.4-fpm.sock; replace php8.4-fpm by your actuall php version
+
+```bash
+server {
+            listen 80;
+            root /var/www/html/wordpress/public_html;
+            index index.php index.html;
+            server_name SUBDOMAIN.DOMAIN.TLD;
+
+        access_log /var/log/nginx/SUBDOMAIN.access.log;
+            error_log /var/log/nginx/SUBDOMAIN.error.log;
+
+            location / {
+                         try_files $uri $uri/ =404;
+            }
+
+            location ~ \.php$ {
+                         include snippets/fastcgi-php.conf;
+                         fastcgi_pass unix:/run/php/php8.4-fpm.sock;
+            }
+            
+            location ~ /\.ht {
+                         deny all;
+            }
+
+            location = /favicon.ico {
+                         log_not_found off;
+                         access_log off;
+            }
+
+            location = /robots.txt {
+                         allow all;
+                         log_not_found off;
+                         access_log off;
+           }
+       
+            location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
+                         expires max;
+                         log_not_found off;
+           }
+}
+```
+
+** Chek your conf nginx
+```bash
+sudo nginx -t
 ```
 
 ```bash
-cd domain1.com
+cd /etc/nginx/sites-enabled
+sudo ln -s ../sites-available/wordpress.conf .
+```
+```bash
+systemctl reload nginx
+```
+
+```bash
+cd /var/www/html/wordpress/public_html
 sudo wget https://wordpress.org/latest.zip
 sudo apt-get install unzip
 sudo unzip latest.zip
@@ -162,7 +229,17 @@ sudo unzip latest.zip
 
 
 ```bash
+mariaDB user
+root
+root
 
+wpuser
+wppwd
+
+userWordPress
+
+narvalo
+4nRJT)8WNBK8t*k9Wq
 ```
 
 
