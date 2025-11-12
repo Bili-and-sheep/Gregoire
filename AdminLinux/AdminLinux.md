@@ -113,10 +113,62 @@ nslookup oteria.lan
 
 
 
-## TP3 - Install HTTPD / NGINX
+## TP3 - Web
+### Install HTTPD / NGINX
+
 ```bash
-sudo apt install apache2
+sudo apt install apache2 php-cli
+sudo apt install php-fpm php-mysql mysql-server nginx unzip php-xml
 ```
+
+### Install MariaDB
+```bash
+sudo apt-get install mariadb-server 
+sudo systemctl enable mariadb.service
+sudo mariadb-secure-installation
+```
+
+
+
+
+
+
+
+
+### Install Wordpress (NGINX)
+```bash
+cd /etc/nginx/sites-available
+```bash
+sudo rm default
+```
+
+```bash
+ls /var/run/php
+```
+
+```bash
+sudo mkdir -p /var/www/html/wordpress/public_html
+```
+
+```bash
+cd domain1.com
+sudo wget https://wordpress.org/latest.zip
+sudo apt-get install unzip
+sudo unzip latest.zip
+```
+
+
+
+
+```bash
+
+```
+
+
+
+
+
+
 
 
 
