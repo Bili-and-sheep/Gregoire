@@ -24,15 +24,15 @@ TP Disk :
 
 
 VM :
-	[]Template
-	[]PC-GUI
-	[]DNS
-	[]BDD
-	[]Apache
+	[X]Template
+	[X]PC-GUI
+	[X]DNS
+	[X]BDD
+	[X]Apache
 	[]Nginx
 
 TP dns :
-[]Mettre une IP statique sur le serveur
+[X]Mettre une IP statique sur le serveur
 []Installer un bind9 qui fera office de serveur faisant autorité sur le nom de domaine oteria.lan et utilisable également comme résolveur DNS.
 []Créer et configurer des zones DNS pour le nom de domaine oteria.lan
 []Tester si le service DNS fonctionne en testant les entrées des zones avec dig ou nslookup
