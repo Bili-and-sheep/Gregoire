@@ -1,10 +1,4 @@
 # TP_DC-DNS
-
-NewUser
-
-malcom-riz@Bertrand.local
-Root1234
-
 ## Partie 2
 1. Que signifie ADDS ? DNS ?
 ADDS : Active Directory Domaine Service
