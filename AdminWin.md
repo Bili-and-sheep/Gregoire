@@ -141,3 +141,17 @@ COPY essai1.dat essai2.dat
 ```
 
 
+
+# USER / PWD
+
+Administrateur
+
+WinServer2019
+```bash
+Root12346789
+```
+
+WinServer2025
+```bash
+Root1234678
+```

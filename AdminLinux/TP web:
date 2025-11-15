@@ -7,3 +7,42 @@ TP web:
 [X]Le serveur de base de données de chaque service doit être sur la VM BDD
 []Proposer une configuration sécurisée des services
 []Implémenter la partie chiffrement avec le protocole TLS. Les certificats x509 ne doivent pas être autosignés
+
+
+
+
+
+Reloaded
+
+TP Disk :
+[X]Crée un LVM
+[X]Crée 4 partion ext4
+	[X] vartmp (/var/tmp)
+	[X] varlog (/var/log)
+	[X] tmp (/tmp)
+	[X] root (/)
+
+
+VM :
+	[]Template
+	[]PC-GUI
+	[]DNS
+	[]BDD
+	[]Apache
+	[]Nginx
+
+TP dns :
+[]Mettre une IP statique sur le serveur
+[]Installer un bind9 qui fera office de serveur faisant autorité sur le nom de domaine oteria.lan et utilisable également comme résolveur DNS.
+[]Créer et configurer des zones DNS pour le nom de domaine oteria.lan
+[]Tester si le service DNS fonctionne en testant les entrées des zones avec dig ou nslookup
+
+TP web:
+[]Cloner le template trois fois. Appeller les clones httpd et nginx et un nommé bdd
+[]Le serveur de base de données de chaque service doit être sur la VM BDD
+[]Installer php-fpm et nginx sur la VM nginx
+[]Installer php-cli et apache2 sur la VM httpd
+[]Installer Wordpress sur nginx
+[]Installer Nextcloud sur httpd
+[]Proposer une configuration sécurisée des services
+[]Implémenter la partie chiffrement avec le protocole TLS. Les certificats x509 ne doivent pas être autosignés
