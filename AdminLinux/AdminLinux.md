@@ -11,7 +11,7 @@ sudo apt-get install vim
 
 ------------------------------------------------------------------------
 
-# 1. TP1 --- Disk
+# 1. TP1 - Disk
 
 -   [x] Partition the disk with an EFI part (USE as : EFI sys Part;
     Bootable Flag : off)\
@@ -25,7 +25,7 @@ sudo apt-get install vim
 
 ------------------------------------------------------------------------
 
-# 2. TP2 --- Serveur DNS
+# 2. TP2 - Serveur DNS
 
 ## 2.1 Dup VM TP1
 
@@ -230,12 +230,18 @@ sudo apt install php-fpm php-mysql mariadb-server nginx unzip php-xml
 
 # 4. Install WordPress (NGINX)
 
+## 4. Requirements
+``` bash
+sudo apt-get install php8.4 php8.4-cli php8.4-fpm php8.4-mysql php8.4-opcache php8.4-mbstring php8.4-xml php8.4-gd php8.4-curl
+```
+
 ## 4.1 Create Wordpress DB
 
 ``` bash
 mariadb -h ip.of.your.db.server -u user -p
-CREATE DATABASE wordpress_db;
-GRANT ALL ON wordpress_db.* TO 'wpuser'@'%' IDENTIFIED BY 'Passw0rd!' WITH GRANT OPTION;
+CREATE USER 'wpuser'@'%' IDENTIFIED BY 'wppwd';
+CREATE DATABASE IF NOT EXISTS wordpress_db;
+GRANT ALL PRIVILEGES ON wordpress_db.* TO 'wpuser'@'%';
 FLUSH PRIVILEGES;
 ```
 
@@ -256,18 +262,18 @@ ls /var/run/php
 Create config:
 
 ``` bash
-vim wordpress.conf
+sudo vim /etc/nginx/sites-available/wordpress.conf
 ```
 
 ``` nginx
 server {
     listen 80;
-    root /var/www/wordpress/public_html;
+    root /var/www/wordpress/;
     index index.php index.html;
-    server_name SUBDOMAIN.DOMAIN.TLD;
+    server_name oteria.lan;
 
-    access_log /var/log/nginx/SUBDOMAIN.access.log;
-    error_log /var/log/nginx/SUBDOMAIN.error.log;
+    access_log /var/log/nginx/oteria.access.log;
+    error_log /var/log/nginx/oteria.error.log;
 
     location / {
         try_files $uri $uri/ =404;
@@ -304,7 +310,7 @@ Enable:
 cd /etc/nginx/sites-enabled
 sudo ln -s ../sites-available/wordpress.conf .
 sudo nginx -t
-systemctl reload nginx
+sudo systemctl reload nginx
 ```
 
 ------------------------------------------------------------------------
@@ -312,25 +318,47 @@ systemctl reload nginx
 ## 4.3 Install WordPress
 
 ``` bash
-cd /var/www/wordpress/public_html
+sudo mkdir -p /var/www/wordpress/
+```
+``` bash
+cd /var/www/wordpress/
+```
+``` bash
 sudo wget https://wordpress.org/latest.tar.gz
+```
+``` bash
 sudo tar -zxvf latest.tar.gz
+```
+``` bash
 sudo mv wordpress/* .
+```
+``` bash
 sudo rm -rf wordpress
-cd /var/www/html/wordpress/public_html
-chown -R www-data:www-data *
-chmod -R 755 *
+```
+``` bash
+cd /var/www/html/wordpress/
+```
+``` bash
+sudo chown -R www-data:www-data *
+sudo chmod -R 755 *
 ```
 
 Configure:
 
 ``` bash
-cd /var/www/wordpress/public_html
+cd /var/www/wordpress/
 sudo mv wp-config-sample.php wp-config.php
 sudo vim wp-config.php
 ```
 
 ------------------------------------------------------------------------
+
+## 4.4 Finish wordpress installation via web interface
+
+Go to http://oteria.lan and follow the instructions.
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+
 
 # 5. Install NextCloud (Apache2)
 
@@ -452,6 +480,16 @@ FLUSH PRIVILEGES;
 ```
 
 ------------------------------------------------------------------------
+
+## 5.8 Finish NextCloud installation via web interface
+
+Go to http://next.oteria.lan and follow the instructions.
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+
+
+# 6. Securize  Apache2 / NGINX with Hashicorp Vault
+
 
 
 

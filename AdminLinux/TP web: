@@ -29,20 +29,26 @@ VM :
 	[X]DNS
 	[X]BDD
 	[X]Apache
-	[]Nginx
+	[X]Nginx
 
 TP dns :
 [X]Mettre une IP statique sur le serveur
-[]Installer un bind9 qui fera office de serveur faisant autorité sur le nom de domaine oteria.lan et utilisable également comme résolveur DNS.
-[]Créer et configurer des zones DNS pour le nom de domaine oteria.lan
-[]Tester si le service DNS fonctionne en testant les entrées des zones avec dig ou nslookup
+[X]Installer un bind9 qui fera office de serveur faisant autorité sur le nom de domaine oteria.lan et utilisable également comme résolveur DNS.
+[X]Créer et configurer des zones DNS pour le nom de domaine oteria.lan
+[X]Tester si le service DNS fonctionne en testant les entrées des zones avec dig ou nslookup
 
 TP web:
-[]Cloner le template trois fois. Appeller les clones httpd et nginx et un nommé bdd
-[]Le serveur de base de données de chaque service doit être sur la VM BDD
-[]Installer php-fpm et nginx sur la VM nginx
-[]Installer php-cli et apache2 sur la VM httpd
-[]Installer Wordpress sur nginx
-[]Installer Nextcloud sur httpd
+[X]Cloner le template trois fois. Appeller les clones httpd et nginx et un nommé bdd
+[X]Le serveur de base de données de chaque service doit être sur la VM BDD
+[X]Installer php-fpm et nginx sur la VM nginx
+[X]Installer php-cli et apache2 sur la VM httpd
+[X]Installer Wordpress sur nginx
+[X]Installer Nextcloud sur httpd
 []Proposer une configuration sécurisée des services
 []Implémenter la partie chiffrement avec le protocole TLS. Les certificats x509 ne doivent pas être autosignés
+
+
+Pour faire la partie certificats, deux solutions:
+Certificat auto-signé (signé par lui-même, plus simple, mais non applicable en production). Les certificats doivent être créés pour les domaines oteria.lan et nextcloud.oteria.lan
+Création d'une PKI (Public Key Infrastructure) simple avec un certificat pour le domaine oteria.lan et nextcloud.oteria.lan
+La méthode souhaitée et celle attendue pour ce TP et le projet final sera la méthode PKI. La méthode PKI est recommandée et produit en entreprise sur ce type de besoin (chiffrement des flux de HTTP via TLS).
