@@ -488,10 +488,176 @@ Go to http://next.oteria.lan and follow the instructions.
 
 
 # 6. Securize  Apache2 / NGINX with Hashicorp Vault
+Guide :\
+https://developer.hashicorp.com/vault/tutorials/pki/pki-engine?variants=vault-deploy:selfhosted
+https://developer.hashicorp.com/vault/docs/deploy/run-as-service
+------------------------------------------------------------------------
+## 6.1 Install Vault with a gpg key verification
+Offical doc : https://developer.hashicorp.com/vault/install#linux
+``` bash
+wget -O - https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(grep -oP '(?<=UBUNTU_CODENAME=).*' /etc/os-release || lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+sudo apt update && sudo apt install vault
+```
+------------------------------------------------------------------------
+## 6.2 install dependencies
+
+``` bash
+sudo apt-get install jq
+sudo apt-get install openssl
+```
+------------------------------------------------------------------------
+
+## 6.3 Enable Vault PKI and Set TTL
+
+On your Vault host (or a host with `vault` configured):
+
+```bash
+vault secrets enable pki
+
+vault secrets tune -max-lease-ttl=8760h pki
+```
+------------------------------------------------------------------------
+## 6.4 Create the Internal Root CA
+
+```bash
+vault write pki/root/generate/internal
+  common_name="oteria.lan Root CA"
+  ttl=87600h > oteria-root-ca.crt
+```
+
+- This creates a self-signed root CA inside Vault for the `oteria.lan` internal zone.
+
+------------------------------------------------------------------------
+
+## 6.5 Configure PKI URLs
+
+These URLs are embedded in issued certificates as “Issuing CA” and “CRL Distribution Point”:
+
+```bash
+vault write pki/config/urls
+  issuing_certificates="http://oteria.lan/v1/pki/ca"
+  crl_distribution_points="http://oteria.lan/v1/pki/crl"
+```
+
+------------------------------------------------------------------------
+
+## 6.6 Create a PKI Role for `*.oteria.lan`
+
+Create a role that allows the base domain, subdomains, and wildcard certificates:
+
+```bash
+vault write pki/roles/oteria-lan
+  allowed_domains="oteria.lan"
+  allow_subdomains=true
+  allow_bare_domains=true
+  allow_wildcard_certificates=true
+  max_ttl="720h"
+```
+
+------------------------------------------------------------------------
+
+## 6.7 Issue the Wildcard Certificate
+
+Issue a wildcard certificate for `*.oteria.lan` and include `oteria.lan` as an alt name:
+
+```bash
+vault write -format=json pki/issue/oteria-lan
+  common_name="*.oteria.lan"
+  alt_names="oteria.lan"
+  ttl="720h" > oteria-wildcard.json
+```
+
+Extract the certificate, private key, and issuing CA using `jq`:
+
+```bash
+cat oteria-wildcard.json | jq -r '.data.certificate'  > oteria-wildcard.crt
+cat oteria-wildcard.json | jq -r '.data.private_key'  > oteria-wildcard.key
+cat oteria-wildcard.json | jq -r '.data.issuing_ca'   > oteria-issuing-ca.crt
+```
+
+Create a full chain file (leaf + issuing CA):
+
+```bash
+cat oteria-wildcard.crt oteria-issuing-ca.crt > oteria-wildcard-fullchain.crt
+```
+
+You will deploy:
+
+- `oteria-wildcard-fullchain.crt`
+- `oteria-wildcard.key`
+- `oteria-issuing-ca.crt` (or `oteria-root-ca.crt`, see next step)
+
+------------------------------------------------------------------------
+
+## 6.8 Export the Root CA Certificate
+
+To avoid CLI parsing issues with `pki/ca`, use `pki/cert/ca` instead:
+
+```bash
+vault read -format=json pki/cert/ca | jq -r '.data.certificate' > oteria-root-ca.crt
+```
+
+Verify:
+
+```bash
+openssl x509 -in oteria-root-ca.crt -noout -subject -issuer
+```
+
+You should see a self-signed root such as:
+
+```text
+subject= /CN=oteria.lan Root CA
+issuer=  /CN=oteria.lan Root CA
+```
+
+Use `oteria-root-ca.crt` to install the CA into client trust stores.
+
+------------------------------------------------------------------------
+
+## 6.9 Install CA Certificate on Clients (Optional but Recommended)
+
+To avoid browser warnings like “potential security risk,” install `oteria-root-ca.crt` on client machines.
+
+### 6.9.1 Firefox (per-user)
+
+1. Open **Settings → Privacy & Security**.
+2. Scroll to **Certificates** and click **View Certificates…**.
+3. Go to the **Authorities** tab and click **Import…**.
+4. Select `oteria-root-ca.crt`.
+5. Check **“Trust this CA to identify websites”**.
+6. Confirm and restart Firefox.
+
+### 6.9.2. Debian/Ubuntu System-Wide
+
+```bash
+sudo cp oteria-root-ca.crt /usr/local/share/ca-certificates/oteria-root-ca.crt
+sudo update-ca-certificates
+```
+
+Restart your browser and tools that use system trust.
+
+------------------------------------------------------------------------
+
+## 7. Deploy Certificates to Web Servers
+
+On each web server (Nginx/Apache), place the files in a secure directory, e.g.:
+
+```text
+/etc/ssl/oteriaSSL_Vault/oteria-wildcard-fullchain.crt
+/etc/ssl/oteriaSSL_Vault/oteria-wildcard.key
+/etc/ssl/oteriaSSL_Vault/oteria-root-ca.crt
+```
+
+## 7.1 Nginx SSL Configuration Example
+
+Please refer to this[`nginxSnippet.md`](nginxSnippet.md) for Nginx SSL configuration using the Vault-issued certificates.
 
 
+------------------------------------------------------------------------
 
+## 7.2 Apache SSL Configuration Example
 
+Please refer to this[`apacheSnippet.md`](apacheSnippet.md) for Nginx SSL configuration using the Vault-issued certificates.
 
-
-
+------------------------------------------------------------------------
