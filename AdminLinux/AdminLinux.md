@@ -377,9 +377,8 @@ php-curl php-mbstring php-intl php-gmp php-xml php-imagick php-zip
 ## 5.2 Download Nextcloud
 
 ``` bash
-cd /var/www
-sudo mkdir nextTemp
-cd nextTemp
+sudo mkdir -p /var/www/nextTemp/
+cd /var/www/nextTemp/
 ```
 
 ### 5.2.1 Download
