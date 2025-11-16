@@ -27,9 +27,9 @@ sudo a2enmod rewrite
 
     SSLEngine on
 
-    SSLCertificateFile      /etc/ssl/oteriaSSL_Vault/oteria-wildcard-fullchain.crt
-    SSLCertificateKeyFile   /etc/ssl/oteriaSSL_Vault/oteria-wildcard.key
-    SSLCACertificateFile    /etc/ssl/oteriaSSL_Vault/oteria-root-ca.crt
+    SSLCertificateFile      /etc/ssl/oteriaSSL_Vault/oteria.crt
+    SSLCertificateKeyFile   /etc/ssl/oteriaSSL_Vault/oteria.key
+    SSLCACertificateFile    /etc/ssl/oteriaSSL_Vault/oteria.crt
 
     <Directory /var/www/next>
         Options Indexes FollowSymLinks

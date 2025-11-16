@@ -32,9 +32,9 @@ server {
     access_log /var/log/nginx/oteria.access.log;
     error_log  /var/log/nginx/oteria.error.log;
 
-    ssl_certificate           /etc/ssl/oteriaSSL_Vault/oteria-wildcard-fullchain.crt;
-    ssl_certificate_key       /etc/ssl/oteriaSSL_Vault/oteria-wildcard.key;
-    ssl_trusted_certificate   /etc/ssl/oteriaSSL_Vault/oteria-root-ca.crt;
+    ssl_certificate           /etc/ssl/oteriaSSL_Vault/oteria.certificate.crt;
+    ssl_certificate_key       /etc/ssl/oteriaSSL_Vault/oteria.key;
+    ssl_trusted_certificate   /etc/ssl/oteriaSSL_Vault/oteria.trusted_certificate.crt;
 
     # WordPress front controller
     location / {

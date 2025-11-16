@@ -537,6 +537,7 @@ vault secrets enable pki
 vault secrets tune -max-lease-ttl=87600h pki
 ```
 ----------------------------------------------------------------------------
+## From 6.4 to 6.13 is the CLI way if you use Vault WebUI please refer to the official doc above.
 ## 6.4 Create the Internal Root CA
 
 Generate a self-signed Root CA for `oteria.lan` **in the `pki` mount**, following the official pattern:
@@ -710,7 +711,11 @@ issuer=  /CN=oteria.lan Root CA
 Use `oteria-root-ca.crt` to install the CA into client trust stores.
 
 ----------------------------------------------------------------------------
-## 6.14 Install CA Certificate on Clients (Optional but Recommended)
+
+
+
+
+## 6.14 Install CA Certificate on Clients
 
 To avoid browser warnings like “potential security risk,” install `oteria-root-ca.crt` on client machines.
 
@@ -738,16 +743,31 @@ Restart your browser and any tools that use system trust.
 On each web server (Nginx/Apache), place the files in a secure directory, e.g.:
 
 ```text
-/etc/ssl/oteriaSSL_Vault/oteria-wildcard-fullchain.crt
-/etc/ssl/oteriaSSL_Vault/oteria-wildcard.key
-/etc/ssl/oteriaSSL_Vault/oteria-root-ca.crt
+/etc/ssl/oteriaSSL_Vault/oteria.certifiacte_full.crt
+/etc/ssl/oteriaSSL_Vault/oteria.key
+/etc/ssl/oteriaSSL_Vault/oteria.trusted_certificate.crt
 ```
+
+If you have follow the WebUI tutorial , you have exported those files from the WebUI :
+- privetKey.pem
+- cert.pem
+- ca_chain.pem
+- issuing_ca.pem
+
+You need to rename and concatenate those files as follows:
+
+```bash
+/etc/ssl/oteriaSSL_Vault/oteria.certifiacte_full.crt = cert.pem + ca_chain.pem
+/etc/ssl/oteriaSSL_Vault/oteria.key = privetKey.pem
+/etc/ssl/oteriaSSL_Vault/oteria.trusted_certificate.crt = issuing_ca.pem
+```
+
 
 Restrict permissions on the private key:
 
 ```bash
-sudo chown root:root /etc/ssl/oteriaSSL_Vault/oteria-wildcard.key
-sudo chmod 600 /etc/ssl/oteriaSSL_Vault/oteria-wildcard.key
+sudo chown root:root /etc/ssl/oteriaSSL_Vault/oteria.key
+sudo chmod 600 /etc/ssl/oteriaSSL_Vault/oteria.key
 ```
 
 
