@@ -1,5 +1,22 @@
 # TP_DC-DNS
-## Partie 2
+
+[TP3-DC-DNS.pdf](PDF/TP3-DC-DNS.pdf)
+
+## Partie 1 : Examen des informations du serveur DNS
+
+### A. Examen des informations du serveur DNS
+OK
+
+### B. Examen des informations du serveur DNS
+OK
+
+### C . Ajout d'un serveur au domaine
+OK
+
+### D . Vérification des données de la zone principale
+OK
+
+## Partie 2: Questions complémentaires de compréhension DC/DNS
 1. Que signifie ADDS ? DNS ?  
 ADDS : Active Directory Domaine Service
 DNS : Domaine name service
@@ -7,7 +24,7 @@ DNS : Domaine name service
 
 2. A quoi sert un DNS ? un DC ?  
 DNS : translatter un nom de domaine en IP et inversement
-DC : Domain controller 
+DC : Domain controller, gère les utilisateurs et les ordinateurs d'un domaine
 
 
 3. Le DNS peut-il être séparé du DC ?  
@@ -15,12 +32,12 @@ non
 
 
 4. Dans quelle OU est situé le compte administrateur ? Quels sont ses privilèges ?  
-OU , Administrateur
+OU - Administrateur
 
 
 5. Que font les commandes 2 et 3 en partie C ?  
 set le dns via le server DHCP
-set l'optation d'ip via un server DHCP
+set l'optantion d'ip via un server DHCP
 
 
 6. Quel est le système numérique pour « fd00:1 » ?  
