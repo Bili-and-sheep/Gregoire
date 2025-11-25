@@ -51,7 +51,7 @@ dn,objectClass,givenName,sn,sAMAccountName,userPrincipalName,userAccountControl
 dsadd group "CN=DSTest, OU=Test-TP, DC=Bertrand, DC=local" -samid DSTest -secgrp yes -scope g
 ```
 
-secgrp : A security group (yes) or a distribution group (no) default=Yes.
+secgrp : A security group (yes) or a distribution group (no) default=Yes.  
 scope : Domain local (l), global (g), or universal (u)   default=g
 
 3.  **Modification des appartenances au groupe avec DSmod**
