@@ -73,7 +73,7 @@ dsmod group "CN=DSTest,OU=Test-TP,DC=Bertrand,DC=local" -addmbr
 ```powershell
 dsget group "CN=Test, OU=Test-TP, DC=Bertrand, DC=local" -members
 ```
-    * Show the member of a group with expansion (nested groups)
+* Show the member of a group with expansion (nested groups)
 ```powershell
 dsget group "CN=Test, OU=Test-TP, DC=Bertrand, DC=local" -members -expand
 ```
@@ -119,3 +119,22 @@ dsadd computer "CN=DESKTOP_Test_ADDS, OU=Test-TP, DC=Bertrand, DC=local"
 
 
 ## PARTIE 4 : CREATION D'OBJETS SELON UNE NOMENCLATURE ETABLIE (automatisationviascriptet/oucommandes)
+1. Création d'OU
+ok
+2. Création d'utilisateurs
+ok
+3. Création d'ordinateurs
+ok
+4. Création de groupes
+ok
+
+## PARTIE 5 : PAW (PRIVILEGED ACCESS WORKSTATIONS)
+ok
+## PARTIE 6 : DELEGUATION DE CONTROLE
+ok
+
+## PARTIE 7 : AMELIORATION DE LA SECURITE
+**Plusieurs axe et solution:**
+* Physique (server dédié, redondance, accès physique au serveur restreinte et marquet dans un registre d’accès, post à accréditation, carte d’accès unique, …)
+* Logiciel (principe du moindre privilège, politique de mot de passe forte, …)
+* Humaine (Formation, exercice de crise, audit de sécurité par un tier, …)
