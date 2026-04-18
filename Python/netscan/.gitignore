@@ -1,0 +1,5 @@
+output/*.json
+
+# Ignorer les fichiers Python compilés
+__pycache__/
+*.pyc
