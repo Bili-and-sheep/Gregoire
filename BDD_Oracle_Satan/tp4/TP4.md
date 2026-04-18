@@ -294,3 +294,5 @@
 
 ---
 
+## Rappel TP
+<img src="t04.png" alt="MLD" width="700px">
