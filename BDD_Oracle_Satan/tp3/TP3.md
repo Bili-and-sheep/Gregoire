@@ -51,3 +51,8 @@ Version 23.26.1.0.0
 ```
 ALL PRIVILEGES
 ```
+
+---
+
+## Rappel TP
+<img src="P03.png" alt="MLD" width="700px">
