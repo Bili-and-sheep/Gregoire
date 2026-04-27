@@ -299,6 +299,7 @@
 
 ---
 
-## Crédit 
-- @matissime
-- @Bili-and-sheep
+## Crédit
+
+  - [@Bili-and-sheep](https://www.github.com/Bili-and-sheep)
+  - [@matissime](https://www.github.com/matissime)
