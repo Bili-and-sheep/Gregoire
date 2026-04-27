@@ -253,3 +253,9 @@ ROLLBACK;
 
 ## Rappel TP
 <img src="tO5.png" alt="MLD" width="700px">
+
+---
+  ## Crédit
+
+  • @matissime
+  • @Bili-and-sheep

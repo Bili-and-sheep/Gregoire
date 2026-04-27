@@ -296,3 +296,9 @@
 
 ## Rappel TP
 <img src="t04.png" alt="MLD" width="700px">
+
+---
+
+## Crédit 
+- @matissime
+- @Bili-and-sheep
