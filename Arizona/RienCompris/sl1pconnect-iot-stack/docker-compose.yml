@@ -1,0 +1,144 @@
+services:
+
+  waf:
+    image: owasp/modsecurity-crs:nginx
+    environment:
+      BACKEND: "http://thread-api:8080"
+      PARANOIA: 1
+      ANOMALY_INBOUND: 5
+      ANOMALY_OUTBOUND: 4
+      BLOCKING_PARANOIA: 1
+    volumes:
+      - ./waf/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - dmz
+      - frontend
+    depends_on:
+      - thread-api
+      - tailor-panel
+      - fabric-watch
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
+  db-velvet:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: velvet
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+      POSTGRES_DB: velvet
+    secrets:
+      - db_password
+    volumes:
+      - db-velvet-data:/var/lib/postgresql/data
+      - ./db-velvet/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - backend
+    # port 5432 NE PAS exposer sur l'hôte — accès interne uniquement
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U velvet"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  thread-api:
+    build: ./thread-api
+    environment:
+      DB_HOST: db-velvet
+      DB_NAME: velvet
+      DB_USER: velvet
+      DB_PASSWORD_FILE: /run/secrets/db_password
+      JWT_SECRET_FILE: /run/secrets/jwt_secret
+    secrets:
+      - db_password
+      - jwt_secret
+    networks:
+      - backend
+      - frontend
+    # plus de port exposé directement — tout passe par le WAF
+    depends_on:
+      db-velvet:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8080/health')\""]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
+  tailor-panel:
+    build: ./tailor-panel
+    environment:
+      DB_HOST: db-velvet
+      DB_NAME: velvet
+      DB_USER: velvet
+      DB_PASSWORD_FILE: /run/secrets/db_password
+    secrets:
+      - db_password
+    networks:
+      - backend
+      - frontend
+    depends_on:
+      db-velvet:
+        condition: service_healthy
+    restart: unless-stopped
+
+  stitch-processor:
+    build: ./stitch-processor
+    environment:
+      DB_HOST: db-velvet
+      DB_NAME: velvet
+      DB_USER: velvet
+      DB_PASSWORD_FILE: /run/secrets/db_password
+    secrets:
+      - db_password
+    networks:
+      - backend
+    depends_on:
+      db-velvet:
+        condition: service_healthy
+    restart: unless-stopped
+
+  fabric-watch:
+    build: ./fabric-watch
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD_FILE: /run/secrets/grafana_password
+      GF_AUTH_ANONYMOUS_ENABLED: "false"
+      GF_SERVER_ROOT_URL: "https://localhost/grafana"
+    secrets:
+      - grafana_password
+    networks:
+      - frontend
+      - backend
+    # docker.sock SUPPRIMÉ — était une escalade de privilèges critique
+    # port exposé via WAF uniquement (plus de 9090 direct)
+    restart: unless-stopped
+
+secrets:
+  db_password:
+    file: ./secrets/db_password.txt
+  jwt_secret:
+    file: ./secrets/jwt_secret.txt
+  grafana_password:
+    file: ./secrets/grafana_password.txt
+
+networks:
+  dmz:
+    driver: bridge
+  frontend:
+    driver: bridge
+    internal: true
+  backend:
+    driver: bridge
+    internal: true
+
+volumes:
+  db-velvet-data:
