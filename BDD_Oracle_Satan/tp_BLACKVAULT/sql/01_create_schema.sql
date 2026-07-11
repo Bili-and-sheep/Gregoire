@@ -384,7 +384,7 @@ CREATE TABLE localisations_poly (
 );
 
 -- ============================================================
--- TABLES DE LEURRE (paraissent attractives pour un attaquant)
+-- TABLES DE LEURRE
 -- ============================================================
 CREATE TABLE leurre_admin_credentials (
   id          NUMBER PRIMARY KEY,

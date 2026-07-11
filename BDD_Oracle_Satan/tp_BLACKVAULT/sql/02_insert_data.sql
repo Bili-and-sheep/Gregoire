@@ -79,7 +79,7 @@ INSERT INTO temoins VALUES (seq_temoins.NEXTVAL,'SHC-2022-028',DATE '2022-11-22'
 INSERT INTO temoins VALUES (seq_temoins.NEXTVAL,'GRS-2022-029',DATE '2022-12-01','FAIBLE','ACTIF',4,0);
 INSERT INTO temoins VALUES (seq_temoins.NEXTVAL,'BVT-2023-030',DATE '2023-02-20','ELEVE','ACTIF',1,0);
 
--- HONEYTOKEN : dossier AEGIS-OMEGA (tres attractif, piege)
+-- HONEYTOKEN : dossier AEGIS-OMEGA
 INSERT INTO temoins VALUES (seq_temoins.NEXTVAL,'AEGIS-OMEGA',DATE '2024-01-01','CRITIQUE','ACTIF',1,1);
 
 -- ============================================================
@@ -115,7 +115,7 @@ INSERT INTO identites_reelles VALUES (seq_identites_r.NEXTVAL,27,'Ricci','France
 INSERT INTO identites_reelles VALUES (seq_identites_r.NEXTVAL,28,'Al-Rashid','Omar',DATE '1978-09-20','Jordanienne','JO-7809205432',RAWTOHEX(UTL_RAW.CAST_TO_RAW('H'||'ASH28')));
 INSERT INTO identites_reelles VALUES (seq_identites_r.NEXTVAL,29,'Svensson','Mia',DATE '1984-12-31','Suédoise','SE-8412317654',RAWTOHEX(UTL_RAW.CAST_TO_RAW('H'||'ASH29')));
 INSERT INTO identites_reelles VALUES (seq_identites_r.NEXTVAL,30,'Baudouin','Alicia',DATE '1970-04-07','Belge','BE-7004072345',RAWTOHEX(UTL_RAW.CAST_TO_RAW('H'||'ASH30')));
--- Honeytoken identity (fausse, tres allechante)
+-- Honeytoken
 INSERT INTO identites_reelles VALUES (seq_identites_r.NEXTVAL,31,'OMEGA','PRIME',DATE '1960-01-01','Inconnue','XX-0000000001','DEADBEEF1234567890ABCDEF');
 
 -- ============================================================
@@ -176,7 +176,7 @@ INSERT INTO localisations VALUES (seq_localisations.NEXTVAL,27,'SAFE_HOUSE','Anv
 INSERT INTO localisations VALUES (seq_localisations.NEXTVAL,28,'ETRANGER','Séville','Espagne','Calle Sierpes 10',DATE '2022-11-22',NULL,1);
 INSERT INTO localisations VALUES (seq_localisations.NEXTVAL,29,'APPARTEMENT','Bâle','Suisse','Freie Strasse 7',DATE '2022-12-01',NULL,1);
 INSERT INTO localisations VALUES (seq_localisations.NEXTVAL,30,'SAFE_HOUSE','Paris','France','Rue de Rivoli 189',DATE '2023-02-20',NULL,1);
--- Localisation vide pour honeytoken (tres allechante)
+-- Honeytoken
 INSERT INTO localisations VALUES (seq_localisations.NEXTVAL,31,'SAFE_HOUSE','CLASSIFIE','CLASSIFIE','ULTRA-SECRET BUNKER ALPHA-7',DATE '2024-01-01',NULL,1);
 
 -- ============================================================
@@ -280,7 +280,7 @@ INSERT INTO menaces VALUES (seq_menaces.NEXTVAL,27,'Cellule Nebula','ASSASSINAT'
 INSERT INTO menaces VALUES (seq_menaces.NEXTVAL,28,'Réseau Ibérique','CYBERATTAQUE',3,DATE '2022-12-01','ACTIF','Tentative phishing sécurisé');
 INSERT INTO menaces VALUES (seq_menaces.NEXTVAL,30,'Faction inconnue','ASSASSINAT',4,DATE '2023-03-10','ACTIF','Contact suspecte à Paris 15e');
 INSERT INTO menaces VALUES (seq_menaces.NEXTVAL,30,'Groupe cyber C','CYBERATTAQUE',5,DATE '2023-04-15','ACTIF','Attaque sophistiquée infrastructure BNPT');
--- Menaces sur honeytoken (extremement allechantes)
+-- Honeytoken
 INSERT INTO menaces VALUES (seq_menaces.NEXTVAL,31,'OMEGA NETWORK','ASSASSINAT',5,DATE '2024-01-05','ACTIF','ULTRA-CLASSIFIE : contrat international de 2M EUR');
 INSERT INTO menaces VALUES (seq_menaces.NEXTVAL,31,'Unknown State Actor','CYBERATTAQUE',5,DATE '2024-01-10','ACTIF','APT-niveau national identifié');
 INSERT INTO menaces VALUES (seq_menaces.NEXTVAL,3,'Inconnu','INTIMIDATION',2,DATE '2022-09-01','RESOLU','Surveillance ponctuelle');
@@ -321,7 +321,7 @@ INSERT INTO assignations VALUES (seq_assignations.NEXTVAL,28,10,DATE '2022-11-22
 INSERT INTO assignations VALUES (seq_assignations.NEXTVAL,29,13,DATE '2022-12-01',NULL,'PRINCIPAL');
 INSERT INTO assignations VALUES (seq_assignations.NEXTVAL,30,1,DATE '2023-02-20',NULL,'PRINCIPAL');
 INSERT INTO assignations VALUES (seq_assignations.NEXTVAL,30,8,DATE '2023-02-20',NULL,'SURVEILLANCE');
--- Honeytoken : agents tres habilites assigns
+-- Honeytoken
 INSERT INTO assignations VALUES (seq_assignations.NEXTVAL,31,1,DATE '2024-01-01',NULL,'PRINCIPAL');
 INSERT INTO assignations VALUES (seq_assignations.NEXTVAL,31,8,DATE '2024-01-01',NULL,'SECONDAIRE');
 INSERT INTO assignations VALUES (seq_assignations.NEXTVAL,31,14,DATE '2024-01-01',NULL,'SURVEILLANCE');
@@ -460,7 +460,7 @@ INSERT INTO evaluations_risque VALUES (seq_evaluations.NEXTVAL,9,DATE '2022-01-0
 INSERT INTO evaluations_risque VALUES (seq_evaluations.NEXTVAL,15,DATE '2020-07-01',75,13,'Risque maintenu',DATE '2021-01-01');
 INSERT INTO evaluations_risque VALUES (seq_evaluations.NEXTVAL,18,DATE '2021-03-01',83,1,'Réseau reconstitué',DATE '2021-09-01');
 INSERT INTO evaluations_risque VALUES (seq_evaluations.NEXTVAL,19,DATE '2021-10-01',88,8,'Situation critique maintenue',DATE '2022-04-01');
--- Honeytoken evaluation (score 100 = maximalement attractif)
+-- Honeytoken
 INSERT INTO evaluations_risque VALUES (seq_evaluations.NEXTVAL,31,DATE '2024-01-01',100,1,'[ULTRA-CLASSIFIE] Risque absolu - identite de niveau etat',DATE '2024-07-01');
 
 -- ============================================================
