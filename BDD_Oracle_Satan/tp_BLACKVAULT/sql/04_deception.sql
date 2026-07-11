@@ -17,10 +17,7 @@ CONNECT blackvault/"BlackVault#2025"@FREEPDB1
 -- ============================================================
 
 -- Procédure handler FGA (appelée automatiquement lors de l'accès)
-CREATE OR REPLACE PROCEDURE sp_alerte_honeytoken(
-  schema_name IN VARCHAR2,
-  table_name  IN VARCHAR2
-)
+CREATE OR REPLACE PROCEDURE sp_alerte_honeytoken
 IS
   PRAGMA AUTONOMOUS_TRANSACTION;
 BEGIN
@@ -35,7 +32,7 @@ BEGIN
     SYS_CONTEXT('USERENV', 'IP_ADDRESS') ||
     ' | Session=' || SYS_CONTEXT('USERENV', 'SESSIONID') ||
     ' | OS_User=' || SYS_CONTEXT('USERENV', 'OS_USER') ||
-    ' | Table=' || schema_name || '.' || table_name,
+    ' | Table=BLACKVAULT.TEMOINS',
     'NOUVEAU'
   );
   COMMIT;
@@ -43,44 +40,56 @@ END sp_alerte_honeytoken;
 /
 
 -- Suppression de la politique si elle existe déjà (idempotent)
+-- NOTE : Oracle 26ai (23.26.2) ne supporte plus les handlers FGA (ORA-06550/PLS-00306).
+-- Remplacement par VPD (Virtual Private Database / DBMS_RLS) qui est fonctionnel.
+
+-- Fonction VPD : logue chaque acces non-autorise a TEMOINS et retourne predicate neutre
+CREATE OR REPLACE FUNCTION fn_honeytoken_check(
+  p_schema IN VARCHAR2,
+  p_table  IN VARCHAR2
+) RETURN VARCHAR2
+IS
+  PRAGMA AUTONOMOUS_TRANSACTION;
+  v_user VARCHAR2(50);
 BEGIN
-  DBMS_FGA.DROP_POLICY(
-    object_schema => 'BLACKVAULT',
-    object_name   => 'TEMOINS',
-    policy_name   => 'POL_HONEYTOKEN_AEGIS'
-  );
-EXCEPTION WHEN OTHERS THEN NULL;
-END;
+  v_user := SYS_CONTEXT('USERENV', 'SESSION_USER');
+  IF v_user NOT IN ('BLACKVAULT', 'SYS', 'BV_ADMIN') THEN
+    INSERT INTO alertes_securite (
+      id_alerte, type_alerte, username, date_alerte, details, statut
+    ) VALUES (
+      seq_alertes.NEXTVAL,
+      'HONEYTOKEN_ACCESS',
+      v_user,
+      SYSTIMESTAMP,
+      '[ALERTE CRITIQUE] Acces TEMOINS/AEGIS-OMEGA | IP=' ||
+      SYS_CONTEXT('USERENV', 'IP_ADDRESS') ||
+      ' | OS=' || SYS_CONTEXT('USERENV', 'OS_USER'),
+      'NOUVEAU'
+    );
+    COMMIT;
+  END IF;
+  RETURN '1=1';
+END fn_honeytoken_check;
 /
 
--- Création de la politique FGA sur le HoneyToken
+-- Politique VPD sur TEMOINS (remplace FGA)
+BEGIN DBMS_RLS.DROP_POLICY('BLACKVAULT', 'TEMOINS', 'POL_HONEYTOKEN_VPD'); EXCEPTION WHEN OTHERS THEN NULL; END;
+/
 BEGIN
-  DBMS_FGA.ADD_POLICY(
+  DBMS_RLS.ADD_POLICY(
     object_schema   => 'BLACKVAULT',
     object_name     => 'TEMOINS',
-    policy_name     => 'POL_HONEYTOKEN_AEGIS',
-    audit_condition => 'IS_HONEYTOKEN = 1',
-    audit_column    => 'NUM_DOSSIER,NIVEAU_RISQUE,STATUT',
-    handler_schema  => 'BLACKVAULT',
-    handler_module  => 'SP_ALERTE_HONEYTOKEN',
+    policy_name     => 'POL_HONEYTOKEN_VPD',
+    function_schema => 'BLACKVAULT',
+    policy_function => 'FN_HONEYTOKEN_CHECK',
     statement_types => 'SELECT',
-    enable          => TRUE,
-    audit_trail     => DBMS_FGA.DB + DBMS_FGA.EXTENDED
+    update_check    => FALSE,
+    enable          => TRUE
   );
 END;
 /
 
--- Politique FGA sur IDENTITES_REELLES (Top Secret)
-BEGIN
-  DBMS_FGA.DROP_POLICY(
-    object_schema => 'BLACKVAULT',
-    object_name   => 'IDENTITES_REELLES',
-    policy_name   => 'POL_IDENTITES_REELLES_ACCESS'
-  );
-EXCEPTION WHEN OTHERS THEN NULL;
-END;
-/
-
+-- Log acces IDENTITES_REELLES (procedure standalone, appelee manuellement dans demo)
 CREATE OR REPLACE PROCEDURE sp_alerte_identite_reelle(
   schema_name IN VARCHAR2,
   table_name  IN VARCHAR2
@@ -93,7 +102,7 @@ BEGIN
   ) VALUES (
     seq_log_acces.NEXTVAL,
     SYS_CONTEXT('USERENV', 'SESSION_USER'),
-    'IDENTITES_REELLES',
+    table_name,
     'SELECT',
     SYSTIMESTAMP,
     '[FGA] Acces identite reelle | IP=' || SYS_CONTEXT('USERENV', 'IP_ADDRESS')
@@ -102,21 +111,7 @@ BEGIN
 END sp_alerte_identite_reelle;
 /
 
-BEGIN
-  DBMS_FGA.ADD_POLICY(
-    object_schema   => 'BLACKVAULT',
-    object_name     => 'IDENTITES_REELLES',
-    policy_name     => 'POL_IDENTITES_REELLES_ACCESS',
-    audit_condition => '1=1',
-    handler_schema  => 'BLACKVAULT',
-    handler_module  => 'SP_ALERTE_IDENTITE_REELLE',
-    statement_types => 'SELECT',
-    enable          => TRUE
-  );
-END;
-/
-
-PROMPT [OK] HoneyToken FGA configure sur TEMOINS (AEGIS-OMEGA) et IDENTITES_REELLES
+PROMPT [OK] HoneyToken VPD configure sur TEMOINS (Oracle 26ai - remplace FGA)
 
 
 -- ============================================================
@@ -237,13 +232,13 @@ EXCEPTION WHEN OTHERS THEN NULL;
 END;
 /
 
-CREATE OR REPLACE PROCEDURE sp_fga_leurre_wml(s IN VARCHAR2, t IN VARCHAR2)
+CREATE OR REPLACE PROCEDURE sp_fga_leurre_wml
 IS PRAGMA AUTONOMOUS_TRANSACTION;
 BEGIN
   INSERT INTO alertes_securite VALUES (
     seq_alertes.NEXTVAL,'LEURRE_FGA_ACCESS',
     SYS_CONTEXT('USERENV','SESSION_USER'),SYSTIMESTAMP,
-    '[LEURRE FGA] '||s||'.'||t||' consulte par '||
+    '[LEURRE FGA] BLACKVAULT.LEURRE_WITNESS_MASTER_LIST consulte par '||
     SYS_CONTEXT('USERENV','OS_USER')||' IP='||
     SYS_CONTEXT('USERENV','IP_ADDRESS'),'NOUVEAU'
   ); COMMIT;
@@ -301,7 +296,11 @@ BEGIN
     seq_watermarks.NEXTVAL, p_username, p_id_temoin, v_signature,
     SYSTIMESTAMP, 'Vue watermarkee - acces automatique'
   );
+  COMMIT;
 
+  RETURN v_signature;
+EXCEPTION WHEN OTHERS THEN
+  ROLLBACK;
   RETURN v_signature;
 END fn_generate_watermark;
 /
@@ -339,7 +338,8 @@ CREATE OR REPLACE VIEW vw_export_temoins AS
     niveau_risque,
     statut,
     date_entree,
-    id_programme
+    id_programme,
+    watermark_signature
   FROM vw_temoins_watermarked;
 
 GRANT SELECT ON vw_export_temoins TO bv_directeur, bv_coordinateur, bv_analyste;

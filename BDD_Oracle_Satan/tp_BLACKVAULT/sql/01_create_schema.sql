@@ -488,7 +488,8 @@ GRANT SELECT ON log_connexions         TO bv_admin;
 GRANT SELECT ON log_acces_sensibles    TO bv_admin;
 GRANT SELECT ON alertes_securite       TO bv_admin;
 
--- BV_ANALYSTE : consultation limitee
+-- BV_ANALYSTE : consultation limitee (SELECT TEMOINS requis pour que FGA HoneyToken se declenche)
+GRANT SELECT ON temoins                TO bv_analyste;
 GRANT SELECT ON programmes_protection  TO bv_analyste;
 GRANT SELECT ON vw_temoins_analyste    TO bv_analyste;
 GRANT SELECT ON affaires               TO bv_analyste;
